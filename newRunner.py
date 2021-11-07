@@ -1,54 +1,37 @@
-import srcomapi
+import requests
 
 def getList(name):
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\" + name + ".txt",'r')
-    returnList = []
-    line = file.readline()[:-1]
-    returnList.append(line.split(" ")[1])
-    while line:
+    with open(DIRECTORY + "\\runnersToAdd.txt",'r') as file:
+        returnList = []
         line = file.readline()[:-1]
-        if line:
-            returnList.append(line.split(" ")[1])
-    file.close()
+        while line:
+            returnList.append(line.split(" ")[:-1][1])
+            line = file.readline()
     return returnList
 
-def writeLog(text,user,info):
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\log.txt",'a')
-    file.write(" : ".join([text,user,info]))
-    file.write("\n")
-    print(" : ".join([text,user,info]))
-    file.close()
+def saveUserID(name,flag):
+    data = requests.get("users/{}".format(name)).json()["data"]["id"]
+    with open(DIRECTORY + "\\runners.csv",'a') as file:
+        file.write(";".join([user,data,flag]))
+        file.write("\n")
 
-def saveUserID(user,flag,api):
-    data = api.get("users/{}".format(user))["id"]
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\users.csv",'a')
-    file.write(user + ";" + data + ";" + flag + "\n")
-    file.close()
-    writeLog("id",user,data)
-
-def exist(name):
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\users.csv",'r')
-    data = file.readline()[:-1].split(";")
-    if data[0].lower() == name.lower():
-        file.close()
-        return True
-    while data[0]:
-        data = file.readline()[:-1].split(";")
-        if data[0].lower() == name.lower():
-            file.close()
-            return True
-    return False
+def getRunners():
+    with open(DIRECTORY + "\\runners.csv",'r') as file:
+        data = []
+        line = file.readline()[:-1]
+        while line:
+            runner,_,_ = line[:-1].split(";")
+            data.append(runner)
+            line = file.readline()
+    return data
     
-
-api = srcomapi.SpeedrunCom();
-api.debug = 1
-for name in getList("runnersADD"):
-    #print("user name")
-    #name = input()
+DIRECTORY = "C:\\Users\\Programador\\Documents\\GitHub\\SrcLbMaker\\SrcLbMaker"
+registeredRunners = getRunners()
+for name in getList():
     print(name)
-    if not exist(name):
+    if name not in registeredRunners:
         print("flag")
         flag = input()
-        saveUserID(name,flag,api)
+        saveUserID(name,flag)
     else:
-        print("it's already in the database")
+        print("is already in the database")

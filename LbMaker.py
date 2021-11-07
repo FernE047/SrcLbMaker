@@ -16,7 +16,7 @@ def apiSleep(api,text):
     return data
 
 def getIDs():
-    with open(DIRECTORY + "\\users.csv",'r') as file:
+    with open(DIRECTORY + "\\runners.csv",'r') as file:
         data = {}
         line = file.readline()[:-1]
         while line:
@@ -26,7 +26,7 @@ def getIDs():
     return data
 
 def getFlags():
-    with open(DIRECTORY + "\\users.csv",'r') as file:
+    with open(DIRECTORY + "\\runners.csv",'r') as file:
         data = {}
         line = file.readline()[:-1]
         while line:
