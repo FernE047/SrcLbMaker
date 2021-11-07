@@ -15,7 +15,7 @@ def apiSleep(api,text):
     return data
 
 def getList(name):
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\" + name + ".csv",'r')
+    file = open(DIRECTORY + "\\" + name + ".csv",'r')
     returnList = []
     line = file.readline()[:-1]
     returnList.append(line.split(";")[0])
@@ -27,7 +27,7 @@ def getList(name):
     return returnList
 
 def userId(user,api):
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\users.csv",'r')
+    file = open(DIRECTORY + "\\users.csv",'r')
     data = file.readline()[:-1].split(";")
     if data[0].lower() == user.lower():
         file.close()
@@ -39,7 +39,7 @@ def userId(user,api):
             return data[1]
 
 def writeLog(text,user,info):
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\log.txt",'a')
+    file = open(DIRECTORY + "\\log.txt",'a')
     file.write(" : ".join([text,user,info]))
     file.write("\n")
     print(" : ".join([text,user,info]))
@@ -50,7 +50,7 @@ def getFlag(user):
         return ":united_nations:"
     if user == "Silo_Simon":
         return "(deleted) :flag_us:"
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\users.csv",'r')
+    file = open(DIRECTORY + "\\users.csv",'r')
     data = file.readline()[:-1].split(";")
     if data[0].lower() == user.lower():
         file.close()
@@ -62,7 +62,7 @@ def getFlag(user):
             return data[2]
 
 def getLog(user,info):
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\log.txt",'r')
+    file = open(DIRECTORY + "\\log.txt",'r')
     line = file.readline()[:-1]
     while line:
         line = line.split(" : ")
@@ -170,11 +170,12 @@ def makeLb(data):
         print(line)
         text += line + "\n"
         position += 1
-    file = open("C:\\Users\\Programador\\Desktop\\LBot\\results.txt",'a')
+    file = open(DIRECTORY + "\\results.txt",'a')
     file.write(text)
     file.close()
     return text
 
+DIRECTORY = "C:\\Users\\Programador\\Documents\\GitHub\\SrcLbMaker\\SrcLbMaker"
 a = time()
 api = srcomapi.SpeedrunCom();
 api.debug = 0
