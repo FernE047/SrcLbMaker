@@ -1,4 +1,3 @@
-import srcomapi
 import requests
 import os
 from time import sleep
@@ -6,7 +5,7 @@ from time import time
 
 # Util Section #
 
-def apiSleep(api,text):
+def apiSleep(api,text): #to make sure less than 100 request will be made per minute
     begin = time()
     data = requests.get(text).json()["data"]
     end = time()
