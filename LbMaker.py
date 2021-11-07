@@ -36,7 +36,7 @@ def getFlags():
     return data
 
 def writeCache(title,data):
-    with open(DIRECTORY + "\\cache.csv",'r') as file:
+    with open(DIRECTORY + "\\cache.csv",'w') as file:
         for runner in data:
             file.write(";".join([title,runner,data[runner]]))
             file.write("\n")
