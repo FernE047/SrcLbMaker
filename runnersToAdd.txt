@@ -1,1 +1,20 @@
+!games PeterAfro
+!games drgrumble
++games PeterAfro (I wanted to see if rayu’s bot was talking about games or categories) 
++categories peterafro
++categoriesplayed peterafro
+!runs peterafro
+!runs Kkntucara
+!games oxknifer
+!games bluerapids12
+!games bat
+!runs oreo321
+!games whatsfrog
+!verified whatsfrog
+!rv whatsfrog
+!games pullmatrox
+!wrs pullmatrox
+!games funado
+!games victu
+!games axxis
 +games sundex
