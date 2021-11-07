@@ -7,7 +7,7 @@ from time import time
 
 def apiSleep(api,text): #to make sure less than 100 request will be made per minute
     begin = time()
-    data = requests.get(text).json()["data"]
+    data = requests.get("https://www.speedrun.com/api/v1/" + text).json()["data"]
     end = time()
     timeElapsed = end-begin
     if timeElapsed < 0.6:
