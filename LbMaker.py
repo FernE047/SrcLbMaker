@@ -5,7 +5,7 @@ from time import time
 
 # Util Section #
 
-def apiSleep(api,text): #to make sure less than 100 request will be made per minute
+def apiSleep(text): #to make sure less than 100 request will be made per minute
     begin = time()
     data = requests.get("https://www.speedrun.com/api/v1/" + text).json()["data"]
     end = time()
@@ -54,20 +54,20 @@ def getCache():
                 datas[info][runner] = number
     return [dataGames,dataRuns,dataWrs]
 
-# API Section #
+# Main Section #
 
 def runsByGuestNA():
     total = 0
     offset = 0
     while True:
-        d = apiSleep(api,"runs?guest=N/A&offset={}&max=200".format(offset*200))
+        d = apiSleep("runs?guest=N/A&offset={}&max=200".format(offset*200))
         total += len(d)
         if len(d) < 200:
             break
         offset += 1
     return total
 
-def lbData(api):
+def lbData():
     dataGames, dataRuns, dataWrs = getCache()
     try:
         runnerIDs = getIDs()
@@ -76,7 +76,7 @@ def lbData(api):
             if runner in dataWrs:
                 print("[cache]{0} : {1} : {2}".format("wrs",runner,data))
             else:
-                runs = apiSleep(api,"users/{}/personal-bests?top=1".format(runnerID))
+                runs = apiSleep("users/{}/personal-bests?top=1".format(runnerID))
                 print(" : ".join(["wrs",runner,str(len(runs))]))
                 dataWrs[runner] = len(runs)
             if not((runner in dataRuns) and (runner in dataGames)):
@@ -84,7 +84,7 @@ def lbData(api):
                 totalRuns = 0
                 offset = 0
                 while offset*200 < 10000:
-                    d = apiSleep(api,"runs?user={0}&offset={1}&max=200&status=verified".format(runnerID,offset*200))
+                    d = apiSleep("runs?user={0}&offset={1}&max=200&status=verified".format(runnerID,offset*200))
                     totalRuns += len(d)
                     for run in d:
                         if run["game"] not in gamesPlayed:
@@ -146,7 +146,7 @@ def makeLb(data):
     return text
 
 DIRECTORY = "C:\\Users\\Programador\\Documents\\GitHub\\SrcLbMaker\\SrcLbMaker"
-datas = lbData(api)
+datas = lbData()
 for n,data in enumerate(datas):
     print(["\nWRS:\n","\nGAMES:\n","\nRUNS\n"][n])
     if n==2:
