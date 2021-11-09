@@ -1,7 +1,7 @@
 import requests
 
 def getList():
-    with open(DIRECTORY + "\\runnersToAdd.txt",'r') as file:
+    with open("runnersToAdd.txt",'r') as file:
         returnList = []
         line = file.readline()
         while line:
@@ -10,25 +10,18 @@ def getList():
     return returnList
 
 def saveUserID(Id,name,flag):
-    for character in ("_","*","~"):
-        if name.find(character) != -1:
-            name = '`' + name + '`'
-            break
-    with open(DIRECTORY + "\\runners.csv",'a') as file:
-        file.write(";".join([name,Id,flag]))
-        file.write("\n")
+    with open("runners.csv",'a') as file:
+        csvWriter = csv.writer(file)
+        csvWriter.writerow([name,Id,flag])
 
-def getRunners(): #implement ignore '`'
-    with open(DIRECTORY + "\\runners.csv",'r') as file:
+def getRunners():
+    with open("runners.csv",'r') as file:
+        csvReader = csv.reader(file)
         data = []
-        line = file.readline()[:-1]
-        while line:
-            runner,_,_ = line[:-1].split(";")
+        for runner,_,_ in csvReader:
             data.append(runner.lower())
-            line = file.readline()
     return data
     
-DIRECTORY = "C:\\Users\\Programador\\Documents\\GitHub\\SrcLbMaker\\SrcLbMaker"
 registeredRunners = getRunners()
 for name in getList():
     print(name)

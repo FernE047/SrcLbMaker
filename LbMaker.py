@@ -1,4 +1,5 @@
 import requests
+import csv
 import os
 from time import sleep
 from time import time
@@ -15,42 +16,37 @@ def apiSleep(text): #to make sure less than 100 request will be made per minute
     return data
 
 def getIDs():
-    with open(DIRECTORY + "\\runners.csv",'r') as file:
+    with open("runners.csv",'r') as file:
+        csvReader = csv.reader(file)
         data = {}
-        line = file.readline()[:-1]
-        while line:
-            runner,Id,_ = line[:-1].split(";")
+        for runner,Id,_ in csvReader:
             data[runner] = Id
-            line = file.readline()
     return data
 
 def getFlags():
-    with open(DIRECTORY + "\\runners.csv",'r') as file:
+    with open("runners.csv",'r') as file:
+        csvReader = csv.reader(file)
         data = {}
-        line = file.readline()[:-1]
-        while line:
-            runner,_,flag = line[:-1].split(";")
+        for runner,_,flag in csvReader:
             data[runner] = flag
-            line = file.readline()
     data["Silo_Simon"] = "(deleted) :flag_us:"
     return data
 
 def writeCache(title,data):
-    with open(DIRECTORY + "\\cache.csv",'w') as file:
+    with open("cache.csv",'w') as file:
+        csvWriter = csv.writer(file)
         for runner in data:
-            file.write(";".join([title,runner,data[runner]]))
-            file.write("\n")
+            csvWriter.writerow([title,runner,data[runner]])
 
 def getCache():
     dataGames = {}
     dataRuns = {}
     dataWrs = {}
-    datas = {"games":dataGames,"runs":dataRuns,"wrs":dataWrs}
-    if "cache.csv" in os.listdir(DIRECTORY):
-        with open(DIRECTORY + "\\cache.csv",'r') as file:
-            line = file.readline()[:-1]
-            while line:
-                info,runner,number = line.split(";")
+    if "cache.csv" in os.listdir():
+        datas = {"games":dataGames,"runs":dataRuns,"wrs":dataWrs}
+        with open("cache.csv",'r') as file:
+            csvReader = csv.reader(file)
+            for info,runner,number in csvReader:
                 datas[info][runner] = number
     return [dataGames,dataRuns,dataWrs]
 
@@ -137,15 +133,14 @@ def makeLb(data):
                 tiedPos += 1
             else:
                 tiedPos = 0
-        line = "{0}. {1} {2} - {3}".format(position - tiedPos,runner,flags[runner],lb[runner])
+        line = "{0}. `{1}` {2} - {3}".format(position - tiedPos,runner,flags[runner],lb[runner])
         print(line)
         text += line + "\n"
         position += 1
-    with open(DIRECTORY + "\\results.txt",'a') as file:
+    with open("results.txt",'a') as file:
         file.write(text)
     return text
 
-DIRECTORY = "C:\\Users\\Programador\\Documents\\GitHub\\SrcLbMaker\\SrcLbMaker"
 datas = lbData()
 for n,data in enumerate(datas):
     print(["\nWRS:\n","\nGAMES:\n","\nRUNS\n"][n])
