@@ -15,136 +15,127 @@ def apiSleep(text): #to make sure less than 100 request will be made per minute
         sleep(0.6-timeElapsed)
     return data
 
-def getIDs():
+def getRunnerInfo():
     with open("runners.csv",'r') as file:
-        csvReader = csv.reader(file)
+        csvReader = csv.DictReader(file)
         data = {}
-        for runner,Id,_ in csvReader:
-            data[runner] = Id
+        for info in csvReader:
+            data[info['name']] = info
     return data
 
-def getFlags():
-    with open("runners.csv",'r') as file:
-        csvReader = csv.reader(file)
-        data = {}
-        for runner,_,flag in csvReader:
-            data[runner] = flag
-    data["Silo_Simon"] = "(deleted) :flag_us:"
-    return data
-
-def writeCache(title,data):
+def writeCache(runners):
     with open("cache.csv",'w') as file:
         csvWriter = csv.writer(file)
-        for runner in data:
-            csvWriter.writerow([title,runner,data[runner]])
+        for runner in list(runners.values()):
+            for cat in ["wrs","runs","games"]:
+                if cat not in runner:
+                    runner[cat] = ''
+            csvWriter.writerow([runner["name"],runner["games"],runner["runs"],runner["wrs"]])
 
-def getCache():
-    dataGames = {}
-    dataRuns = {}
-    dataWrs = {}
+def getCache(runners):
     if "cache.csv" in os.listdir():
-        datas = {"games":dataGames,"runs":dataRuns,"wrs":dataWrs}
         with open("cache.csv",'r') as file:
             csvReader = csv.reader(file)
-            for info,runner,number in csvReader:
-                datas[info][runner] = number
-    return [dataGames,dataRuns,dataWrs]
+            for name,games,runs,wrs in csvReader:
+                if games:
+                    runners[runner]['games'] = games
+                if runs:
+                    runners[runner]['runs'] = runs
+                if wrs:
+                    runners[runner]['wrs'] = wrs
 
 # Main Section #
 
-def runsByGuestNA():
-    total = 0
-    offset = 0
-    while True:
-        d = apiSleep("runs?guest=N/A&offset={}&max=200".format(offset*200))
-        total += len(d)
-        if len(d) < 200:
-            break
-        offset += 1
-    return total
-
 def lbData():
-    dataGames, dataRuns, dataWrs = getCache()
+    runners = getRunnerInfo() #implement classes
+    getCache(runners)
     try:
-        runnerIDs = getIDs()
-        for runner in runnerIDs:
-            runnerID = runnerIDs[runner]
-            if runner in dataWrs:
-                print("[cache]{0} : {1} : {2}".format("wrs",runner,data))
+        for runner in list(runners.values()):
+            if ("runs" in runner) and ("games" in runner):
+                print("[cache]{0} : {1} : {2}".format("runs",runner['name'],runner['runs']))
+                print("[cache]{0} : {1} : {2}".format("games",runner['name'],runner['games']))
             else:
-                runs = apiSleep("users/{}/personal-bests?top=1".format(runnerID))
-                print(" : ".join(["wrs",runner,str(len(runs))]))
-                dataWrs[runner] = len(runs)
-            if not((runner in dataRuns) and (runner in dataGames)):
+                if not runner["id"]:
+                    search = "runs?guest=" + runner["name"] + "&offset={}&max=200&status=verified"
+                    runner["name"] += " (guest)"
+                else:
+                    search = "runs?user=" + runner["id"] + "&offset={}&max=200&status=verified"
                 gamesPlayed = []
                 totalRuns = 0
                 offset = 0
                 while offset*200 < 10000:
-                    d = apiSleep("runs?user={0}&offset={1}&max=200&status=verified".format(runnerID,offset*200))
-                    totalRuns += len(d)
-                    for run in d:
+                    runs = apiSleep(search.format(offset*200))
+                    totalRuns += len(runs)
+                    for run in runs:
                         if run["game"] not in gamesPlayed:
                             gamesPlayed.append(run["game"])
-                    if len(d) < 200:
+                    if len(runs) < 200:
                         break
                     offset += 1
                 if offset*200==10000:
                     print("implement backwards search for runner : " + runner)
                     raise Exception("implement backwards search for runner : " + runner)
-                print(" : ".join(["runs",runner,str(totalRuns)]))
-                print(" : ".join(["games",runner,str(len(gamesPlayed))]))
-                
-                dataRuns[runner] = totalRuns
-                dataGames[runner] = len(gamesPlayed)
+                print(" : ".join(["games",runner["name"],str(len(gamesPlayed))]))
+                print(" : ".join(["runs",runner["name"],str(totalRuns)]))
+                runner["runs"] = totalRuns
+                runner["games"] = len(gamesPlayed)
+            if "wrs" in runner:
+                print("[cache]{0} : {1} : {2}".format("wrs",runner['name'],data))
             else:
-                print("[cache]{0} : {1} : {2}".format("runs",runner,dataRuns[runner]))
-                print("[cache]{0} : {1} : {2}".format("games",runner,dataGames[runner]))
-        dataGames["Silo_Simon"] = 123
-        return (dataWrs,dataGames,dataRuns)
+                if runner["id"]:
+                    runs = apiSleep("users/{}/personal-bests?top=1".format(runner["id"]))
+                    print(" : ".join(["wrs",runner['name'],str(len(runs))]))
+                    runner['wrs'] = len(runs)
+        runners["Silo_Simon"] = {"name":"Silo_Simon (deleted)", "id":"zxz9ppr8", "flag":":flag_us:","games":123}
+        writeCache(runners)
+        return runners
     except:
-        writeCache("wrs",dataWrs)
-        writeCache("runs",dataRuns)
-        writeCache("games",dataGames)
+        writeCache(runners)
 
-def lbOrder(data):
-    lbNumbers = list(data.values())
+def lbOrder(runners,info):
+    lbNumbers = []
+    for runner in list(runners.values()):
+        if info in runner:
+            if runner[info] not in lbNumbers:
+                lbNumbers.append(runner[info])
     lbNumbers.sort()
     lbNumbers = reversed(lbNumbers)
     lbRunners = []
-    lb = {}
     for number in lbNumbers:
-        for runner in data:
-            if data[runner] == number:
-                break
-        lb[runner] = data.pop(runner)
-        lbRunners.append(runner)
-    return lbRunners,lb
+        for runner in list(runners.values()):
+            if info in runner:
+                if runner[info] == number:
+                    lbRunners.append(runner)
+    return lbRunners
 
-def makeLb(data):
-    lbRunners,lb = lbOrder(data)
-    flags = getFlags()
+def makeLb(runners,info):
+    lbRunners = lbOrder(runners,info)
     position = 1
     tiedPos = 0
-    text = ""
-    for i in range(len(lbRunners)):
-        runner = lbRunners[i]
-        if i != 0:
-            if lb[runner] == lb[lbRunners[i-1]]:
-                tiedPos += 1
-            else:
-                tiedPos = 0
-        line = "{0}. `{1}` {2} - {3}".format(position - tiedPos,runner,flags[runner],lb[runner])
-        print(line)
-        text += line + "\n"
-        position += 1
     with open("results.txt",'a') as file:
-        file.write(text)
-    return text
+        for i in range(len(lbRunners)):
+            runner = lbRunners[i]
+            if "id" not in runner:
+                line = "`{0: 3d}`.{1}`{2} - {3: 5d}`".format("-",
+                                                             runner["flag"],
+                                                             " "*(25-len(runner['name'])) + runner['name'],
+                                                             runner[info])
+            else:
+                if i != 0:
+                    if runner[info] == lbRunners[i-1][info]:
+                        tiedPos += 1
+                    else:
+                        tiedPos = 0
+                line = "`{0: 3d}.`{1}`{2} - {3: 5d}`".format(position - tiedPos,
+                                                             runner["flag"],
+                                                             " "*(25-len(runner['name'])) + runner['name'],
+                                                             runner[info])
+                position += 1
+            print(line)
+            file.write(line+"\n")
 
-datas = lbData()
-for n,data in enumerate(datas):
-    print(["\nWRS:\n","\nGAMES:\n","\nRUNS\n"][n])
-    if n==2:
-        print("-. N/A(guest) :united_nations: : "+str(runsByGuestNA()))
-    makeLb(data)
-    print()
+runners = lbData()
+for info in ("games","runs","wrs"):
+    print(info.upper(),end = "\n\n")
+    makeLb(runners,info)
+    print("\n")
