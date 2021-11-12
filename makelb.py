@@ -56,7 +56,7 @@ def makeLb(lbtype, lblength):
     print(datetime.datetime.now().date())
 
     for n, i in enumerate(result):
-        print(f"{n + 1}. {i[0]} - {i[1]} {i[2]}")
+        print(f"{n + 1}. {i[0]} - {i[1]} {i[2]}") # i[0] - nickname, i[1] - value, i[2] - flag
         if n + 1 >= lblength:
             break
 
