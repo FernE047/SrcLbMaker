@@ -56,11 +56,9 @@ def getRunsVerified(userid):
 
 
 def getModCount(userid):
-    data = requests.get(
+    return requests.get(
         f"{API}games?moderator={userid}&_bulk=yes&max=1000"
-    ).json()
-
-    return data["pagination"]["size"]
+    ).json()["pagination"]["size"]
 
 
 def getRunner(username):
