@@ -18,7 +18,7 @@ result = []
         "-L", "--lblength",
         type=int, default=100,
         show_default=True,
-        help="Length of the leaderboard"
+        help="Length of the leaderboard."
 )
 def makeLb(lbtype, lblength):
     filelength = len(open("runners.csv", 'r').readlines())
@@ -45,7 +45,7 @@ def makeLb(lbtype, lblength):
             for i in tqdm(file, total=filelength, ncols=75,
                             unit="runner", ascii=True):
                 result.append([i[0], utils.getRunsVerified(i[1]), i[2]])
-    
+
         elif lbtype == "mc":
             for i in tqdm(file, total=filelength, ncols=75,
                             unit="runner", ascii=True):
@@ -55,10 +55,10 @@ def makeLb(lbtype, lblength):
 
     result.sort(key = lambda x: x[1], reverse=True)
 
-    print(datetime.datetime.now().date())
+    click.echo(datetime.datetime.now().date())
 
     for n, i in enumerate(result):
-        print(f"{n + 1}. {i[0]} - {i[1]} {i[2]}") # i[0] - nickname, i[1] - value, i[2] - flag
+        click.echo(f"{n + 1}. {i[0]} - {i[1]} {i[2]}") # i[0] - nickname, i[1] - value, i[2] - flag
         if n + 1 >= lblength:
             break
 

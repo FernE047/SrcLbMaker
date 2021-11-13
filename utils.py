@@ -50,7 +50,7 @@ def getRunsVerified(userid):
         offset += 1
         if data["pagination"]["size"] < 200:
             done = True
-            
+  
     return data["pagination"]["offset"] + data["pagination"]["size"]
 
 
@@ -60,3 +60,11 @@ def getModCount(userid):
     ).json()
 
     return data["pagination"]["size"]
+
+
+def getRunner(username):
+    data = requests.get(
+        f"{API}users?lookup={username}"
+    ).json()
+
+    return data if data["pagination"]["size"] > 0 else False
