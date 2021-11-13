@@ -4,6 +4,7 @@ import click
 
 import utils
 
+
 @click.command()
 @click.option(
         "-n", "--nickname",
@@ -18,7 +19,10 @@ def addtodb(nickname):
             f"User {nickname} could not be found."
         )
 
-    flag = f":flag_{data['data'][0]['location']['country']['code']}:" if data["data"][0]["location"] else ""
+    if data["data"][0]["location"]:
+        flag = f":flag_{data['data'][0]['location']['country']['code']}:"
+    else:
+        flag = ''
 
     filedata = open("runners.csv", 'r').read()
 

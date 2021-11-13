@@ -7,7 +7,8 @@ Wrs - world records count,\n
 runs - runs count,\n
 gp - games played count,\n
 rv - runs verified by user,\n
-mc - games moderation count."""
+mc - games moderation count.
+"""
 
 
 def getWrs(userid):
@@ -50,7 +51,7 @@ def getRunsVerified(userid):
         offset += 1
         if data["pagination"]["size"] < 200:
             done = True
-  
+
     return data["pagination"]["offset"] + data["pagination"]["size"]
 
 
