@@ -10,14 +10,16 @@ result = []
 
 @click.command()
 @click.option(
-    "-t", "--lbtype", required=True,
-    type=click.Choice(["wrs", "runs", "gp", "rv", "mc"]),
-    help=utils.lbtypehelp)
+        "-t", "--lbtype", required=True,
+        type=click.Choice(["wrs", "runs", "gp", "rv", "mc"]),
+        help=utils.lbtypehelp
+)
 @click.option(
-    "-L", "--lblength",
-    type=int, default=100
-    ,show_default=True,
-    help="Length of the leaderboard")
+        "-L", "--lblength",
+        type=int, default=100,
+        show_default=True,
+        help="Length of the leaderboard"
+)
 def makeLb(lbtype, lblength):
     filelength = len(open("runners.csv", 'r').readlines())
 
