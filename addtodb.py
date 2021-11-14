@@ -24,14 +24,14 @@ def addtodb(nickname):
     else:
         flag = ":united_nations:"
 
-    filedata = open("runners.csv", 'r').read()
+    with open("runners.csv", 'r') as csvfile:
+        filereader = csv.reader(csvfile)
+        if nickname.lower() in [line[0].lower() for line in filereader]:
+            return click.echo(
+                f"{nickname} is already in database"
+            )
 
-    if nickname in filedata:
-        return click.echo(
-            f"{nickname} is already in database"
-        )
-
-    with open("runners.csv", 'a+', newline='') as csvfile:
+    with open("runners.csv", 'a', newline='') as csvfile:
         filewriter = csv.writer(csvfile)
 
         filewriter.writerow([
