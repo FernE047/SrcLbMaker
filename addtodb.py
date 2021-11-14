@@ -22,7 +22,7 @@ def addtodb(nickname):
     if data["data"][0]["location"]:
         flag = f":flag_{data['data'][0]['location']['country']['code']}:"
     else:
-        flag = ''
+        flag = ":united_nations:"
 
     filedata = open("runners.csv", 'r').read()
 
