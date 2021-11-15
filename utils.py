@@ -12,12 +12,14 @@ mc - games moderation count.
 
 
 def getWrs(userid):
+    """Return a user's world records count."""
     return len(requests.get(
             f"{API}users/{userid}/personal-bests?top=1"
         ).json()["data"])
 
 
 def getRuns(userid):
+    """Return a user's runs count."""
     done = False
     offset = 0
 
@@ -33,6 +35,7 @@ def getRuns(userid):
 
 
 def getGamesPlayed(userid):
+    """Return a number of games in which the user has runs."""
     data = requests.get(
         f"{API}users/{userid}/personal-bests"
     ).json()
@@ -41,6 +44,7 @@ def getGamesPlayed(userid):
 
 
 def getRunsVerified(userid):
+    """Return a number of verified runs by user."""
     done = False
     offset = 0
 
@@ -56,12 +60,14 @@ def getRunsVerified(userid):
 
 
 def getModCount(userid):
+    """Return a number of games moderated by user."""
     return requests.get(
         f"{API}games?moderator={userid}&_bulk=yes&max=1000"
     ).json()["pagination"]["size"]
 
 
 def getRunner(username):
+    """Check if the user exists, return his data if any, otherwise False."""
     data = requests.get(
         f"{API}users?lookup={username}"
     ).json()
