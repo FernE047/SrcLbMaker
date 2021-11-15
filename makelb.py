@@ -19,9 +19,10 @@ result = []
         "-L", "--lblength",
         type=int, default=100,
         show_default=True,
-        help="Length of the leaderboard."
+        help="Leaderboard's length."
 )
 def makeLb(lbtype, lblength):
+    """Print leaderboard of a given type."""
     filelength = len(open("runners.csv", 'r').readlines())
 
     with open("runners.csv", 'r') as csvfile:

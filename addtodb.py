@@ -9,14 +9,21 @@ import utils
 @click.option(
         "-n", "--nickname",
         type=str,
-        help="Runners nickname."
+        help="Runner's nickname.",
+        required=True
 )
 def addtodb(nickname):
+    """
+    Add user to runners.csv.
+
+    If the user does not exist print "{nickname} could not be found.".
+    If the user already in runners.csv print "{nickname} is already in database."
+    """
     data = utils.getRunner(nickname)
 
     if not data:
         return click.echo(
-            f"User {nickname} could not be found."
+            f"{nickname} could not be found."
         )
 
     if data["data"][0]["location"]:
