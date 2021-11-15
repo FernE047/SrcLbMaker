@@ -23,7 +23,7 @@ You need python 3.6 or higher.
 To run the command type `python [filename] [options]`
 ### Makelb
 
-```
+```console
 Usage: makelb.py [OPTIONS]
 
 Options:
@@ -42,18 +42,19 @@ Options:
   -L, --lblength INTEGER          Length of the leaderboard.  [default: 100]
 ```
 ### Addtodb
-```
+```console
 Usage: addtodb.py [OPTIONS]
 
 Options:
   -n, --nickname TEXT  Runners nickname.
 ```
 ## Examples
-*   To make a world records count leaderboard run:
+-   To make a world records count leaderboard run:
     ```sh
     python makelb.py -t wrs -L 50
     ```
-*   To add runner "Rayu_" to database run:
+
+-   To add runner "Rayu_" to database run:
     ```sh
     python addtodb.py -n Rayu_
     ```
