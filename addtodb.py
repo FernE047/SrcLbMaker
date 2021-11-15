@@ -13,8 +13,7 @@ import utils
         required=True
 )
 def addtodb(nickname):
-    """
-    Add user to runners.csv.
+    """Add user to runners.csv.
 
     If the user does not exist print "{nickname} could not be found.".
     If the user already in runners.csv print "{nickname} is already in database."
