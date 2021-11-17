@@ -6,7 +6,6 @@ lbtypehelp = """Type of the leaderboard.\n
 Wrs - world records count,\n
 runs - runs count,\n
 gp - games played count,\n
-rv - runs verified by user,\n
 mc - games moderation count.
 """
 
@@ -41,22 +40,6 @@ def getGamesPlayed(userid):
     ).json()
 
     return len(set([i["run"]["game"] for i in data["data"]]))
-
-
-def getRunsVerified(userid):
-    """Return a number of verified runs by user."""
-    done = False
-    offset = 0
-
-    while not done:
-        data = requests.get(
-            f"{API}runs?examiner={userid}&max=200&offset={offset * 200}"
-        ).json()
-        offset += 1
-        if data["pagination"]["size"] < 200:
-            done = True
-
-    return data["pagination"]["offset"] + data["pagination"]["size"]
 
 
 def getModCount(userid):

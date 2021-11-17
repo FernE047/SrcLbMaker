@@ -12,7 +12,7 @@ result = []
 @click.command()
 @click.option(
         "-t", "--lbtype", required=True,
-        type=click.Choice(["wrs", "runs", "gp", "rv", "mc"]),
+        type=click.Choice(["wrs", "runs", "gp", "mc"]),
         help=utils.lbtypehelp
 )
 @click.option(
@@ -43,11 +43,6 @@ def makeLb(lbtype, lblength):
                           unit="runner", ascii=True):
                 result.append([i[0], utils.getGamesPlayed(i[1]), i[2]])
 
-        elif lbtype == "rv":
-            for i in tqdm(file, total=filelength, ncols=75,
-                          unit="runner", ascii=True):
-                result.append([i[0], utils.getRunsVerified(i[1]), i[2]])
-
         elif lbtype == "mc":
             for i in tqdm(file, total=filelength, ncols=75,
                           unit="runner", ascii=True):
@@ -65,7 +60,7 @@ def makeLb(lbtype, lblength):
 
     for n, i in enumerate(result):
         click.echo(
-            f"`{n+1}.`{i[2]}`{i[0]} {' ' * (25-len(str(n+1))-len(i[0]))} {i[1]}`"
+            f"`{n+1}.`{i[2]}`{i[0]} {' ' * (23-len(str(n+1))-len(i[0]))} {i[1]}`"
         )  # i[0] - nickname, i[1] - value, i[2] - flag
         if n+1 >= lblength:
             break
