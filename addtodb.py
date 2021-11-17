@@ -17,6 +17,7 @@ def addtodb(nickname):
 
     If the user does not exist print "{nickname} could not be found.".
     If the user already in runners.csv print "{nickname} is already in database."
+    If successful, don't print anything.
     """
     data = utils.getRunner(nickname)
 
@@ -45,10 +46,6 @@ def addtodb(nickname):
             data["data"][0]["id"],
             flag
         ])
-
-    click.echo(
-        f"{nickname} has been successfully added to the database."
-    )
 
 
 if __name__ == "__main__":
