@@ -27,7 +27,7 @@ To run the command type `python [filename] [options]`
 Usage: makelb.py [OPTIONS]
 
 Options:
-  -t, --lbtype [wrs|runs|gp|rv|mc]
+  -t, --lbtype [wrs|runs|gp|mc]
                                   Type of the leaderboard.
 
                                   Wrs - world records count,
@@ -35,8 +35,6 @@ Options:
                                   runs - runs count,
 
                                   gp - games played count,
-
-                                  rv - runs verified by user,
 
                                   mc - games moderation count.  [required]
   -L, --lblength INTEGER          Length of the leaderboard.  [default: 100]
