@@ -36,7 +36,11 @@ Options:
 
                                   gp - games played count,
 
-                                  mc - games moderation count.  [required]
+                                  mc - games moderation count,
+
+                                  cat - categories played count,
+
+                                  pod - podiums count.  [required]
   -L, --lblength INTEGER          Length of the leaderboard.  [default: 100]
 ```
 ### Addtodb

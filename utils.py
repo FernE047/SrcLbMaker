@@ -6,6 +6,8 @@ lbtypehelp = """Type of the leaderboard.\n
 Wrs - world records count,\n
 runs - runs count,\n
 gp - games played count,\n
+cat - categories played count,\n
+pod - podiums count,\n
 mc - games moderation count.
 """
 
@@ -56,3 +58,17 @@ def getRunner(username):
     ).json()
 
     return data if data["pagination"]["size"] > 0 else False
+
+def getCategoriesPlayed(userid):
+    """Return a number of categories in which the user has runs."""
+    data = requests.get(
+        f"{API}users/{userid}/personal-bests"
+    ).json()
+
+    return len(set([i["run"]["category"] for i in data["data"]]))
+
+def getPodiums(userid):
+    """Return a user's podium count."""
+    return len(requests.get(
+            f"{API}users/{userid}/personal-bests?top=3"
+        ).json()["data"])

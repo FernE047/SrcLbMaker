@@ -12,7 +12,7 @@ result = []
 @click.command()
 @click.option(
         "-t", "--lbtype", required=True,
-        type=click.Choice(["wrs", "runs", "gp", "mc"]),
+        type=click.Choice(["wrs", "runs", "gp", "mc","cat","pod"]),
         help=utils.lbtypehelp
 )
 @click.option(
@@ -47,6 +47,16 @@ def makeLb(lbtype, lblength):
             for i in tqdm(file, total=filelength, ncols=75,
                           unit="runner", ascii=True):
                 result.append([i[0], utils.getModCount(i[1]), i[2]])
+
+        elif lbtype == "cat":
+            for i in tqdm(file, total=filelength, ncols=75,
+                          unit="runner", ascii=True):
+                result.append([i[0], utils.getCategoriesPlayed(i[1]), i[2]])
+
+        elif lbtype == "pod":
+            for i in tqdm(file, total=filelength, ncols=75,
+                          unit="runner", ascii=True):
+                result.append([i[0], utils.getCategoriesPlayed(i[1]), i[2]])
         else:
             return
 
