@@ -1,5 +1,6 @@
 import requests
 
+
 API = "https://www.speedrun.com/api/v1/"
 
 lbtypehelp = """Type of the leaderboard.\n
@@ -59,6 +60,7 @@ def getRunner(username):
 
     return data if data["pagination"]["size"] > 0 else False
 
+
 def getCategoriesPlayed(userid):
     """Return a number of categories in which the user has runs."""
     data = requests.get(
@@ -66,6 +68,7 @@ def getCategoriesPlayed(userid):
     ).json()
 
     return len(set([i["run"]["category"] for i in data["data"]]))
+
 
 def getPodiums(userid):
     """Return a user's podium count."""
