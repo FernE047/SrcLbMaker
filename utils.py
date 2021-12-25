@@ -15,9 +15,12 @@ mc - games moderation count.
 
 def getWrs(userid):
     """Return a user's world records count."""
-    return len(requests.get(
-            f"{API}users/{userid}/personal-bests?top=1"
-        ).json()["data"])
+    try:
+        return len(requests.get(
+                f"{API}users/{userid}/personal-bests?top=1"
+            ).json()["data"])
+    except KeyError:
+        return 0
 
 
 def getRuns(userid):
