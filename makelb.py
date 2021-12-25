@@ -16,6 +16,7 @@ functions = {
     "pod": utils.getPodiums
 }
 
+
 def getData(type):
     result = []
 
@@ -28,7 +29,7 @@ def getData(type):
         for i in tqdm(file, total=filelength, ncols=75,
                       unit="runner", ascii=True):
             result.append([i[0], functions[type](i[1]), i[2]])
-    
+
     return result
 
 
@@ -51,7 +52,7 @@ def getData(type):
 def makeLb(lbtype, lblength):
     """Print leaderboard of a given type."""
     result = getData(lbtype)
-    
+
     result.sort(
         key=lambda x: x[1], reverse=True
     )
