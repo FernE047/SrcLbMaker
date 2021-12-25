@@ -18,6 +18,7 @@ functions = {
 
 
 def getData(type):
+    """return data of the specified type for all users in the database."""
     result = []
 
     with open("runners.csv", 'r') as f:
