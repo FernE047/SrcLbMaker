@@ -1,5 +1,6 @@
 import csv
 import datetime
+from inspect import isfunction, getmembers
 
 import click
 from tqdm import tqdm
@@ -7,18 +8,8 @@ from tqdm import tqdm
 import utils
 
 
-functions = {
-    "wrs": utils.getWrs,
-    "runs": utils.getRuns,
-    "gp": utils.getGamesPlayed,
-    "mc": utils.getModCount,
-    "cat": utils.getCategoriesPlayed,
-    "pod": utils.getPodiums
-}
-
-
 def getData(type):
-    """return data of the specified type for all users in the database."""
+    """Return data of the specified type for all users in the database."""
     result = []
 
     with open("runners.csv", 'r') as f:
@@ -29,7 +20,7 @@ def getData(type):
 
         for i in tqdm(file, total=filelength, ncols=75,
                       unit="runner", ascii=True):
-            result.append([i[0], functions[type](i[1]), i[2]])
+            result.append([i[0], getattr(utils, type)(i[1]), i[2]])
 
     return result
 
@@ -39,8 +30,8 @@ def getData(type):
         "-t",
         "--lbtype",
         required=True,
-        help=utils.lbtypehelp,
-        type=click.Choice([i for i in functions])
+        help="Type of the leaderboard",
+        type=click.Choice([i[0] for i in getmembers(utils) if isfunction(i[1])])
 )
 @click.option(
         "-L",
