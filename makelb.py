@@ -6,7 +6,7 @@ from inspect import isfunction, getmembers
 import click
 from tqdm import tqdm
 
-import utils
+import lbtypes
 
 
 def getData(type):
@@ -21,7 +21,7 @@ def getData(type):
 
         for i in tqdm(file, total=filelength, ncols=75,
                       unit="runner", ascii=True):
-            result.append([i[0], getattr(utils, type)(i[1]), i[2]])
+            result.append([i[0], getattr(lbtypes, type)(i[1]), i[2]])
 
     return result
 
@@ -32,7 +32,7 @@ def getData(type):
         "--lbtype",
         required=True,
         help="Type of the leaderboard",
-        type=click.Choice([i[0] for i in getmembers(utils) if isfunction(i[1])])
+        type=click.Choice([i[0] for i in getmembers(lbtypes) if isfunction(i[1])])
 )
 @click.option(
         "-L",

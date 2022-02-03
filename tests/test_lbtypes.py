@@ -4,17 +4,17 @@ sys.path.insert(1, '.')
 
 import pytest
 
-import utils
+import lbtypes
 
 
 # User x3m55y68 (unban_norris) is banned and has few runs
 # - the result will be unchanged and processed quickly.
 @pytest.mark.parametrize("func, result", [
-    (utils.wrs, 3),
-    (utils.runs, 11),
-    (utils.gp, 1),
-    (utils.cp, 3),
-    (utils.pod, 7)
+    (lbtypes.wrs, 3),
+    (lbtypes.runs, 11),
+    (lbtypes.gp, 1),
+    (lbtypes.cp, 3),
+    (lbtypes.pod, 7)
 ])
 def test_funcs(func, result):
     assert func("x3m55y68") == result
@@ -27,4 +27,4 @@ def test_funcs(func, result):
     ("18vr6lex", 1)
 ])
 def test_mods(userId, result):
-    assert utils.mods(userId) == result
+    assert lbtypes.mods(userId) == result
