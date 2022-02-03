@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import csv
 import datetime
 from inspect import isfunction, getmembers
