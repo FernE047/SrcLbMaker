@@ -9,7 +9,7 @@ from tqdm import tqdm
 import lbtypes
 
 
-def getData(type):
+def getData(lbtype):
     """Return data of the specified type for all users in the database."""
     result = []
 
@@ -21,7 +21,7 @@ def getData(type):
 
         for i in tqdm(file, total=filelength, ncols=75,
                       unit="runner", ascii=True):
-            result.append([i[0], getattr(lbtypes, type)(i[1]), i[2]])
+            result.append([i[0], getattr(lbtypes, lbtype)(i[1]), i[2]])
 
     return result
 
