@@ -1,64 +1,50 @@
+#!/usr/bin/env python3
 import csv
 import datetime
+from inspect import isfunction, getmembers
 
-from tqdm import tqdm
 import click
+from tqdm import tqdm
 
-import utils
+import lbtypes
 
-result = []
+
+def getData(lbtype):
+    """Return data of the specified type for all users in the database."""
+    result = []
+
+    with open("runners.csv", 'r') as f:
+        filelength = len(f.readlines())
+
+    with open("runners.csv", 'r') as csvfile:
+        file = csv.reader(csvfile)
+
+        for i in tqdm(file, total=filelength, ncols=75,
+                      unit="runner", ascii=True):
+            result.append([i[0], getattr(lbtypes, lbtype)(i[1]), i[2]])
+
+    return result
 
 
 @click.command()
 @click.option(
-        "-t", "--lbtype", required=True,
-        type=click.Choice(["wrs", "runs", "gp", "mc","cat","pod"]),
-        help=utils.lbtypehelp
+        "-t",
+        "--lbtype",
+        required=True,
+        help="Type of the leaderboard",
+        type=click.Choice([i[0] for i in getmembers(lbtypes) if isfunction(i[1])])
 )
 @click.option(
-        "-L", "--lblength",
-        type=int, default=100,
+        "-L",
+        "--lblength",
+        type=int,
+        default=100,
         show_default=True,
         help="Leaderboard's length."
 )
 def makeLb(lbtype, lblength):
     """Print leaderboard of a given type."""
-    filelength = len(open("runners.csv", 'r').readlines())
-
-    with open("runners.csv", 'r') as csvfile:
-        file = csv.reader(csvfile)
-
-        if lbtype == "wrs":
-            for i in tqdm(file, total=filelength, ncols=75,
-                          unit="runner", ascii=True):
-                result.append([i[0], utils.getWrs(i[1]), i[2]])
-
-        elif lbtype == "runs":
-            for i in tqdm(file, total=filelength, ncols=75,
-                          unit="runner", ascii=True):
-                result.append([i[0], utils.getRuns(i[1]), i[2]])
-
-        elif lbtype == "gp":
-            for i in tqdm(file, total=filelength, ncols=75,
-                          unit="runner", ascii=True):
-                result.append([i[0], utils.getGamesPlayed(i[1]), i[2]])
-
-        elif lbtype == "mc":
-            for i in tqdm(file, total=filelength, ncols=75,
-                          unit="runner", ascii=True):
-                result.append([i[0], utils.getModCount(i[1]), i[2]])
-
-        elif lbtype == "cat":
-            for i in tqdm(file, total=filelength, ncols=75,
-                          unit="runner", ascii=True):
-                result.append([i[0], utils.getCategoriesPlayed(i[1]), i[2]])
-
-        elif lbtype == "pod":
-            for i in tqdm(file, total=filelength, ncols=75,
-                          unit="runner", ascii=True):
-                result.append([i[0], utils.getCategoriesPlayed(i[1]), i[2]])
-        else:
-            return
+    result = getData(lbtype)
 
     result.sort(
         key=lambda x: x[1], reverse=True
@@ -68,11 +54,11 @@ def makeLb(lbtype, lblength):
         datetime.datetime.now().date()
     )
 
-    for n, i in enumerate(result):
+    for n, i in enumerate(result, start=1):
         click.echo(
-            f"`{n+1}.`{i[2]}`{i[0]} {' ' * (23-len(str(n+1))-len(i[0]))} {i[1]}`"
+            f"`{n}.`{i[2]}`{i[0]} {' ' * (23-len(str(n))-len(i[0]))} {i[1]}`"
         )  # i[0] - nickname, i[1] - value, i[2] - flag
-        if n+1 >= lblength:
+        if n >= lblength:
             break
 
 

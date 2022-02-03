@@ -1,8 +1,8 @@
+#!/usr/bin/env python3
 import csv
 
 import click
-
-import utils
+import requests
 
 
 @click.command()
@@ -19,9 +19,11 @@ def addtodb(nickname):
     If the user already in runners.csv print "{nickname} is already in database."
     If successful, don't print anything.
     """
-    data = utils.getRunner(nickname)
+    data = requests.get(
+        f"https://www.speedrun.com/api/v1/users?lookup={nickname}"
+    ).json()
 
-    if not data:
+    if not data["pagination"]["size"]:
         return click.echo(
             f"{nickname} could not be found."
         )
